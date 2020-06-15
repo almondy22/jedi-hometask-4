@@ -1,0 +1,11 @@
+.main-header {
+  text-align: center;
+}
+td.delete-item {
+  box-sizing: border-box;
+  font-size: 30px;
+  line-height: 100%;
+  color: red;
+  text-align: center;
+  cursor: pointer;
+}
