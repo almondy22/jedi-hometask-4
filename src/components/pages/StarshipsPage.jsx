@@ -1,60 +1,44 @@
-import React, {useState} from 'react';
+import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import Table from ".././common/Table";
-import Form from ".././common/Form";
+import { getStarships, starshipsColumns } from '../../services/starshipsService'
 
-let data = [
-    { Name: "AAT BATTLE TANK", Appearance: "Star Wars: Revenge of the Sith", Length: "9.19m", ID: "1" },
-    { Name: "A-WING FIGHTER", Appearance: "Star Wars: Return of the Jedi", Length: "9.6m", ID: "2" },
-    { Name: "ARC-170 STARFIGHTER", Appearance: "Star Wars: The Clone Wars", Length: "12.71m", ID: "3" },
-];
-
-const columns = Object.keys(data[0]);
-
-function StarshipsPage() {
-  const [starships, setStarships] = useState(data);
-
-  const handleAddItem = (itemData) => {
-    data = [...starships, itemData];
-    setStarships(data);
-  };
+function StarshipsPage({starships, setStarships}) {
+  useEffect(() => {
+    const getData = async () => {
+      const data = await getStarships()
+      setStarships(data)
+      localStorage.setItem("starshipsData", JSON.stringify(data))
+    }
+    if (!localStorage.starshipsData) {
+      getData()
+    } else {
+      const data = localStorage.getItem("starshipsData")
+      setStarships(JSON.parse(data))
+    }
+  }, [setStarships]);
 
   const handleDeleteItem = (itemId) => {
-    data = [...starships];
+    const data = [...starships];
     data.splice(itemId, 1);
     setStarships(data);
+    localStorage.setItem("starshipsData", JSON.stringify(data))
   }
-
-  const getInitialData = () => {
-    return columns.reduce((cols, columnName) => {
-      cols[columnName] = "";
-      return cols;
-    }, {});
-  };
+  
   return (
-    <main>
-      <h1 className="main-header">Starships Page</h1>
-      {data.length === 0 ? (
-        <>
-          <h1 className="main-header mt-3 mb-3">
-            There is no information on this page!
-          </h1>
-        </>
-      ) : (
-        <>
+      <main>
+          <h1 className="main-header">Starships Page</h1>
+          <Link to="/starships/new" className="btn btn-warning mb-4">
+              New starship
+          </Link>
           <Table
-            data={starships}
-            columns={columns}
-            tableDescriptor="Starship"
-            onDeleteItem={handleDeleteItem}
+              data={starships}
+              columns={starshipsColumns}
+              tableDescriptor="Starship"
+              onDeleteItem={handleDeleteItem}
+              page="starships"
           />
-        </>
-      )}
-      <Form
-        columns={columns}
-        initialData={getInitialData()}
-        onAddData={handleAddItem}
-      />
-    </main>
+      </main>
   );
 }
 

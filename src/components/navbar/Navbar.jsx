@@ -26,12 +26,12 @@ function Navbar() {
             </Link>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" to="/planet">
+            <Link className="nav-link" to="/planets">
               Planets
             </Link>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" to="/starship">
+            <Link className="nav-link" to="/starships">
               Starship
             </Link>
           </li>
