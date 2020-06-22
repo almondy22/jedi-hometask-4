@@ -1,65 +1,44 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
+import { Link } from 'react-router-dom';
 import Table from ".././common/Table";
-import Form from ".././common/Form";
+import { getPlanets, planetsColumns } from '../../services/planetsService'
 
-let data = [
-  {
-    Name: "Anaxes",
-    Appearance: "Star Wars: The Clone Wars",
-    Year: "2020",
-    ID: "1",
-  },
-  { Name: "Akiva", Appearance: "Star Wars: Aftermath", Year: "2015", ID: "2" },
-  { Name: "Cantonica", Appearance: "The Last Jedi", Year: "2017", ID: "3" },
-];
-
-const columns = Object.keys(data[0]);
-
-function PlanetsPage() {
-  const [planets, setPlanets] = useState(data);
-
-  const handleAddItem = (itemData) => {
-    data = [...planets, itemData];
-    setPlanets(data);
-  };
+function PlanetsPage({planets, setPlanets}) {
+  useEffect(() => {
+    const getData = async () => {
+      const data = await getPlanets()
+      setPlanets(data)
+      localStorage.setItem("planetsData", JSON.stringify(data))
+    }
+    if (!localStorage.planetsData) {
+      getData()
+    } else {
+      const data = localStorage.getItem("planetsData")
+      setPlanets(JSON.parse(data))
+    }
+  }, [setPlanets]);
 
   const handleDeleteItem = (itemId) => {
-    data = [...planets];
+    const data = [...planets];
     data.splice(itemId, 1);
     setPlanets(data);
+    localStorage.setItem("planetsData", JSON.stringify(data))
   };
 
-  const getInitialData = () => {
-    return columns.reduce((cols, columnName) => {
-      cols[columnName] = "";
-      return cols;
-    }, {});
-  };
   return (
-    <main>
-      <h1 className="main-header">Planets Page</h1>
-      {data.length === 0 ? (
-        <>
-          <h1 className="main-header mt-3 mb-3">
-            There is no information on this page!
-          </h1>
-        </>
-      ) : (
-        <>
+      <main>
+          <h1 className="main-header">Planets Page</h1>
+          <Link to="/planets/new" className="btn btn-warning mb-4">
+              New planet
+          </Link>
           <Table
-            data={planets}
-            columns={columns}
-            tableDescriptor="Planet"
-            onDeleteItem={handleDeleteItem}
+              data={planets}
+              columns={planetsColumns}
+              tableDescriptor="Planet"
+              onDeleteItem={handleDeleteItem}
+              page="planets"
           />
-        </>
-      )}
-      <Form
-        columns={columns}
-        initialData={getInitialData()}
-        onAddData={handleAddItem}
-      />
-    </main>
+      </main>
   );
 }
 

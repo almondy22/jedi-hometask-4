@@ -9,3 +9,7 @@ td.delete-item {
   text-align: center;
   cursor: pointer;
 }
+a.badge.badge-dark {
+font-size: 16px !important;  
+font-weight: normal;
+}

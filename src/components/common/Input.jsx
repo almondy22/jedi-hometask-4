@@ -6,6 +6,7 @@ const Input = ({name, label, error, ...rest}) => {
             <label htmlFor="name">{label}</label>
             <input id={name} name={name} {...rest} className="form-control"/>
             { error && <div className="alert alert-danger">{error}</div> }
+            
         </div>
     );
 }

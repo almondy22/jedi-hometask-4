@@ -1,60 +1,45 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
+import { Link } from 'react-router-dom';
 import Table from ".././common/Table";
-import Form from ".././common/Form";
+import { getPeople, peopleColumns } from '../../services/peopleService'
 
-let data = [
-  { First: "Mark", Last: "Otto", Handle: "@motto", ID: "1" },
-  { First: "Jacob", Last: "Thornton", Handle: "@fat", ID: "2" },
-  { First: "Larry", Last: "the Bird", Handle: "@twitter", ID: "3" },
-];
+function PeoplePage({people, setPeople}) {  
+  useEffect(() => {
+    const getData = async () => {      
+      const data = await getPeople();
+      setPeople(data)
+      localStorage.setItem("peopleData", JSON.stringify(data))
+    }
 
-const columns = Object.keys(data[0]);
-
-function PeoplePage() {
-  const [people, setPeople] = useState(data);
-
-  const handleAddItem = (itemData) => {
-    data = [...people, itemData];
-    setPeople(data);
-  };
+    if (!localStorage.peopleData) {
+      getData()
+    } else {
+      const data = localStorage.getItem("peopleData")
+      setPeople(JSON.parse(data))
+    }    
+  }, [setPeople]);
 
   const handleDeleteItem = (itemId) => {
-    data = [...people];
+    const data = [...people];
     data.splice(itemId, 1);
     setPeople(data);
+    localStorage.setItem("peopleData", JSON.stringify(data))
   };
 
-  const getInitialData = () => {
-    return columns.reduce((cols, columnName) => {
-      cols[columnName] = "";
-      return cols;
-    }, {});
-  };
   return (
-    <main>
-      <h1 className="main-header">People Page</h1>
-      {data.length === 0 ? (
-        <>
-          <h1 className="main-header mt-3 mb-3">
-            There is no information on this page!
-          </h1>
-        </>
-      ) : (
-        <>
+      <main>
+          <h1 className="main-header">People Page</h1>
+          <Link to="/people/new" className="btn btn-warning mb-4">
+              New person
+          </Link>
           <Table
-            data={people}
-            columns={columns}
-            tableDescriptor="People"
-            onDeleteItem={handleDeleteItem}
+              data={people}
+              columns={peopleColumns}
+              tableDescriptor="People"
+              onDeleteItem={handleDeleteItem}
+              page="people"
           />
-        </>
-      )}
-      <Form
-        columns={columns}
-        initialData={getInitialData()}
-        onAddData={handleAddItem}
-      />
-    </main>
+      </main>
   );
 }
 
