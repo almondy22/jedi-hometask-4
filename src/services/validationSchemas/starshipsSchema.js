@@ -29,9 +29,9 @@ const schema = {
     },
     passengers: {
         presence: true,
-        numericality: {
-            greaterThan: 0,
-            lessThanOrEqualTo: 1000000,
+        length: {
+            minimum: 3,
+            maximum: 40,
         },
     },
 };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
     BrowserRouter as Router,
     Switch,
@@ -15,59 +15,22 @@ import "./App.css";
 import "bootstrap/dist/css/bootstrap.css";
 
 function App() {
-    const [people, setPeople] = useState([]);
-    const [planets, setPlanets] = useState([]);
-    const [starships, setStarships] = useState([]);
-    const addHandler = (item, page, edit, id) => {
-        let data = [];
-        switch (page) {
-            case "people":
-                if (edit) {
-                    data = [...people];
-                    data[id] = item;
-                } else data = [...people, item];
-                setPeople(data);
-                localStorage.setItem("peopleData", JSON.stringify(data));
-                break;
-            case "planets":
-                if (edit) {
-                    data = [...planets];
-                    data[id] = item;
-                } else data = [...planets, item];
-                setPlanets(data);
-                localStorage.setItem("planetsData", JSON.stringify(data));
-                break;
-            case "starships":
-                if (edit) {
-                    data = [...starships];
-                    data[id] = item;
-                } else data = [...starships, item];
-                setStarships(data);
-                localStorage.setItem("starshipsData", JSON.stringify(data));
-                break;
-            default:
-                break;
-        }
-    };
-
     return (
         <Router>
             <div className="container">
-                <Navbar />
+                <Navbar/>
                 <Switch>
                     <Route exact path="/">
-                        <Redirect to="/people" />
+                        <Redirect to="/people"/>
                     </Route>
                     <Route exact path="/people">
-                        <PeoplePage people={people} setPeople={setPeople} />
+                        <PeoplePage/>
                     </Route>
                     <Route
                         exact
                         path="/people/:id"
                         render={(props) => (
                             <AddForm
-                                data={people}
-                                addHandler={addHandler}
                                 page="people"
                                 {...props}
                             />
@@ -75,43 +38,33 @@ function App() {
                     />
 
                     <Route exact path="/planets">
-                        <PlanetsPage
-                            planets={planets}
-                            setPlanets={setPlanets}
-                        />
+                        <PlanetsPage/>
                     </Route>
                     <Route
                         exact
                         path="/planets/:id"
                         render={(props) => (
                             <AddForm
-                                data={planets}
-                                addHandler={addHandler}
                                 page="planets"
                                 {...props}
                             />
                         )}
-                    ></Route>
+                    />
                     <Route exact path="/starships">
-                        <StarshipsPage
-                            starships={starships}
-                            setStarships={setStarships}
-                        />
+                        <StarshipsPage/>
                     </Route>
                     <Route
                         exact
                         path="/starships/:id"
                         render={(props) => (
                             <AddForm
-                                data={starships}
-                                addHandler={addHandler}
                                 page="starships"
                                 {...props}
                             />
                         )}
-                    ></Route>
+                    />
                     <Route path="*">
-                        <NotFound />
+                        <NotFound/>
                     </Route>
                 </Switch>
             </div>

@@ -1,10 +1,14 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import {nanoid} from "nanoid";
 
 function Table({columns, data, tableDescriptor, onDeleteItem, page}) {
-
-  const handleDelete = (event) => {
-    onDeleteItem(event.currentTarget.id - 1);
+    const handleDelete = (event) => {
+    onDeleteItem(event.currentTarget.id);
+  }
+  const renderCell = (item, column) => {
+      return(
+          column.content ? column.content(item) : item[column.colName]
+      )
   }
 
   if (!data.length) return(
@@ -16,31 +20,25 @@ function Table({columns, data, tableDescriptor, onDeleteItem, page}) {
           <thead>
               <tr>
                   <th scope="col">{tableDescriptor}</th>
-                  {columns.map((columnTitle) => (
-                      <th key={columnTitle} scope="col">
-                          {columnTitle}
+                  {columns.map((column) => (
+                      <th key={nanoid()} scope="col">
+                          {column.colName}
                       </th>
                   ))}
               </tr>
           </thead>
           <tbody>
               {data.map((item, index) => (
-                  <tr key={Math.random()}>
+                  <tr key={nanoid()}>
                       <th scope="row">{++index}</th>
-                      {columns.map((columnTitle) =>
-                          columnTitle === "Name" ? (
-                              <td key={Math.random()}><Link to={`/${page}/${index}`} className="badge badge-dark">
-                                  {item[columnTitle.toLowerCase()]}
-                              </Link></td>
-                          ) : (
-                              <td key={Math.random()}>
-                                  {item[columnTitle.toLowerCase()]}
+                      {columns.map((column) =>
+                              <td key={nanoid()}>
+                                  {renderCell(item, column)}
                               </td>
-                          )
                       )}
                       <td
-                          id={index}
-                          key={item.id}
+                          id={item.id}
+                          key={nanoid()}
                           className="delete-item"
                           onClick={(event) => handleDelete(event)}
                       >
