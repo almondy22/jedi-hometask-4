@@ -31,7 +31,6 @@ const Form = ({ columns, initialData, onAddData, page }) => {
                 break;
         }
         const error = Validate(personData, schema);
-        console.log(error);
         if (error) {
             event.preventDefault();
             setErrors(error);
