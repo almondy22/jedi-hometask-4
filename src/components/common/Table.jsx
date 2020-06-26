@@ -2,9 +2,6 @@ import React from 'react';
 import {nanoid} from "nanoid";
 
 function Table({columns, data, tableDescriptor, onDeleteItem, page}) {
-    const handleDelete = (event) => {
-    onDeleteItem(event.currentTarget.id);
-  }
   const renderCell = (item, column) => {
       return(
           column.content ? column.content(item) : item[column.colName]
@@ -40,7 +37,7 @@ function Table({columns, data, tableDescriptor, onDeleteItem, page}) {
                           id={item.id}
                           key={nanoid()}
                           className="delete-item"
-                          onClick={(event) => handleDelete(event)}
+                          onClick={(event) => onDeleteItem(event.currentTarget.id)}
                       >
                           &times;
                       </td>
